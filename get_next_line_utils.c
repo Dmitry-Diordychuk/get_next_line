@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/11 15:31:58 by kdustin           #+#    #+#             */
-/*   Updated: 2020/06/11 22:56:48 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/06/13 15:14:57 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,52 @@ char	*remalloc(char *str, const char *buf, int actl_buf_len)
 	result[j] = '\0';
 	free(str);
 	return(result);
+}
+
+char	*ft_strdup(const char *s1)
+{
+	int		i;
+	int		len;
+	char	*p;
+
+	len = ft_strlen(s1);
+	if (!(p = malloc((len + 1) * sizeof(char))))
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		p[i] = s1[i];
+		i++;
+	}
+	p[i] = '\0';
+	return (p);
+}
+
+char	*cut_first_line(char **str)
+{
+	char *result;
+	char *new_str;
+	char *new_line_symbol;
+
+	new_str = NULL;
+	new_line_symbol = ft_strchr(*str, '\n');
+	if (new_line_symbol != NULL)
+	{
+		if (new_line_symbol[1] != '\0')
+			if (!(new_str = ft_strdup(new_line_symbol + 1)))
+				return (NULL);
+		*new_line_symbol = '\0';
+		if (!(result = ft_strdup(*str)))
+		{
+			free(new_str);
+			return (NULL);
+		}
+		*str = new_str;
+		free(*str);
+		return (result);
+	}
+	if (!(result = ft_strdup(*str)))
+		return (NULL);
+	free(*str);
+	return (result);
 }

@@ -6,29 +6,37 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/11 15:28:44 by kdustin           #+#    #+#             */
-/*   Updated: 2020/06/11 22:54:13 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/06/14 15:25:53 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+int	free_return_error(char **str)
+{
+	free(*str);
+	return (-1);
+}
+
 int	get_next_line(int fd, char **line)
 {
-	char		buffer[BUFFER_SIZE];
-	char		*new_line;
+	char		buf[BUFFER_SIZE];
+	char		*new_line_char;
 	static char	*saved;
-	int			read_counter;
+	int			rd_counter;
 
-	buffer[0] = '\0';
-	read_counter = 0;
-	while (!(new_line = ft_strchr(buffer, '\n')) && read_counter < BUFFER_SIZE)
+	buf[0] = '\0';
+	rd_counter = 1;
+	new_line_char = NULL;
+	while (!(new_line_char = ft_strchr(buf, '\n')) && rd_counter > 0)
 	{
-		read_counter = read(fd, buffer, BUFFER_SIZE);
-		if (!(saved = remalloc(saved, buffer, read_counter)))
-			return (-1);
+		rd_counter = read(fd, buf, BUFFER_SIZE);
+		if (!(saved = remalloc(saved, buf, rd_counter)))
+			return (free_return_error(&saved));
 	}
-	// Заглушка
-	*line = saved;
-	// Отрезать кусок.
-	return (0);
+	if (!(*line = cut_first_line(&saved)))
+		return (free_return_error(&saved));
+	if (saved == NULL)
+		return (0);
+	return (1);
 }
