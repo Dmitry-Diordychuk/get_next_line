@@ -6,7 +6,7 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/11 15:31:58 by kdustin           #+#    #+#             */
-/*   Updated: 2020/06/15 14:34:18 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/06/16 19:27:49 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ char	*ft_strchr(const char *s, int c)
 {
 	int	i;
 
+	if (s == NULL)
+		return (NULL);
 	i = 0;
 	while (s[i] != '\0')
 	{
@@ -43,26 +45,26 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-char	*remalloc(char *str, const char *buf, int actl_buf_len)
+char	*data_add(char *data, const char *buf, int buf_data_len)
 {
 	char	*result;
 	int		i;
 	int		j;
 
-	if (!(result = malloc(sizeof(char) * (ft_strlen(str) + actl_buf_len + 1))))
+	if (!(result = malloc(sizeof(char) * (ft_strlen(data) + buf_data_len + 1))))
 		return (NULL);
 	i = 0;
-	while (str != NULL && str[i] != '\0')
+	while (data != NULL && data[i] != '\0')
 	{
-		result[i] = str[i];
+		result[i] = data[i];
 		i++;
 	}
 	j = i;
 	i = 0;
-	while (i < actl_buf_len)
+	while (i < buf_data_len)
 		result[j++] = buf[i++];
 	result[j] = '\0';
-	free(str);
+	free(data);
 	return(result);
 }
 
@@ -85,31 +87,31 @@ char	*ft_strdup(const char *s1)
 	return (p);
 }
 
-char	*cut_first_line(char **str)
+char	*cut_first_line(char **data)
 {
 	char *result;
-	char *new_str;
-	char *new_line_symbol;
+	char *data_cutted;
+	char *separator;
 
-	new_str = NULL;
-	new_line_symbol = ft_strchr(*str, '\n');
-	if (new_line_symbol != NULL)
+	data_cutted = NULL;
+	if ((separator = ft_strchr(*data, '\n')) != NULL)
 	{
-		if (new_line_symbol[1] != '\0')
-			if (!(new_str = ft_strdup(new_line_symbol + 1)))
+		if (separator[1] != '\0' && !(data_cutted = ft_strdup(separator + 1)))
 				return (NULL);
-		*new_line_symbol = '\0';
-		if (!(result = ft_strdup(*str)))
+		*separator = '\0';
+		if (!(result = ft_strdup(*data)))
 		{
-			free(new_str);
+			if (data_cutted)
+				free(data_cutted);
 			return (NULL);
 		}
-		*str = new_str;
-		free(*str);
+		free(*data);
+		*data = data_cutted;
 		return (result);
 	}
-	if (!(result = ft_strdup(*str)))
+	if (!(result = ft_strdup(*data)))
 		return (NULL);
-	free(*str);
+	free(*data);
+	*data = NULL;
 	return (result);
 }

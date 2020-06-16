@@ -6,37 +6,37 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/11 15:28:44 by kdustin           #+#    #+#             */
-/*   Updated: 2020/06/15 15:17:18 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/06/16 20:41:58 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	free_return_error(char **str)
+int	handle_error(char **str)
 {
-	free(*str);
+	if (*str)
+		free(*str);
 	return (-1);
 }
 
 int	get_next_line(int fd, char **line)
 {
 	char		buf[BUFFER_SIZE];
-	char		*new_line_char;
-	static char	*saved;
-	int			rd_counter;
+	static char	*data;
+	int			counter;
 
 	buf[0] = '\0';
-	rd_counter = 1;
-	new_line_char = NULL;
-	while (!(new_line_char = ft_strchr(buf, '\n')) && rd_counter > 0)
+	counter = 1;
+	while (!ft_strchr(data, '\n') && (counter = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
-		rd_counter = read(fd, buf, BUFFER_SIZE);
-		if (!(saved = remalloc(saved, buf, rd_counter)))
-			return (free_return_error(&saved));
+		if (!(data = data_add(data, buf, counter)))
+			return (handle_error(&data));
 	}
-	if (!(*line = cut_first_line(&saved)))
-		return (free_return_error(&saved));
-	if (saved == NULL)
+	if (counter < 0)
+		return (handle_error(&data));
+	if (!(*line = cut_first_line(&data)))
+		return (handle_error(&data));
+	if (counter == 0)
 		return (0);
 	return (1);
 }
