@@ -6,24 +6,24 @@
 /*   By: kdustin <kdustin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/06/11 15:28:44 by kdustin           #+#    #+#             */
-/*   Updated: 2020/06/16 20:41:58 by kdustin          ###   ########.fr       */
+/*   Updated: 2020/06/18 15:50:51 by kdustin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	handle_error(char **str)
+int		handle_error(char **str)
 {
 	if (*str)
 		free(*str);
 	return (-1);
 }
 
-int	get_next_line(int fd, char **line)
+int		get_next_line(int fd, char **line)
 {
-	char		buf[BUFFER_SIZE];
-	static char	*data;
-	int			counter;
+	char			buf[BUFFER_SIZE];
+	static char		*data;
+	int				counter;
 
 	buf[0] = '\0';
 	counter = 1;
